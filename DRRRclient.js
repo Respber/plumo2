@@ -101,54 +101,6 @@ function interactMessage(){
 	for(var i=0;i<obj.length;i++){
 		if(obj[i].type!="join"&&obj[i].type!="leave"&&obj[i].time>LAST_MSG_TIMESTAMP){
 			LAST_MSG_TIMESTAMP=obj[i].time;
-			if(obj[i].message.indexOf("plumo")!=-1&&obj[i].message.indexOf("调戏")!=-1){
-				if(randomNum(0,100)>50)sendPublicMsg("/me 请"+obj[i].from.name+"大人不要这样对待plumo哦！",100);
-				else sendPublicMsg("/me "+obj[i].from.name+"大人，您真的那么想体验一下遍体鳞伤的感觉么？[此处会有图片]",100);
-			}
-			
-			if(obj[i].message.indexOf("给我来一杯")!=-1){
-				var j=0;
-				for(;j<obj[i].message.length;j++)if(obj[i].message[j]=='杯')break;
-				var t=obj[i].message.slice(j+1);
-				sendPublicMsg("/me @"+obj[i].from.name+" "+obj[i].from.name+"大人,您的"+t);
-			}
-			
-			if(obj[i].message.indexOf("播放")!=-1){
-				if(obj[i].message.indexOf("页码")!=-1){
-					var j=0;
-					for(;j<obj[i].message.length;j++)if(obj[i].message[j]=='码')break;
-					var t=parseInt(obj[i].message.slice(j+1));
-					var str="";
-					for(var i=t;i<t+2;i++)str+=(i+":"+MDATA.result.songs[i].name+"-"+MDATA.result.songs[i].artists[0].name+"|");
-					sendPublicMsg("/me "+MUSIC_FLAG+" "+str);
-				}
-				if(MUSIC_FLAG==false){
-					MUSIC_FLAG=true;
-					var j=0;
-					for(;j<obj[i].message.length;j++)if(obj[i].message[j]=='放')break;
-					var t=obj[i].message.slice(j+1);
-					$.ajax({
-						url:("http://127.0.0.1:3000/search?keywords="+t),
-						async:false,
-						success:function(data){
-							var str="";
-							for(var i=0;i<2;i++)str+=(i+":"+data.result.songs[i].name+"-"+data.result.songs[i].artists[0].name+"|");
-							sendPublicMsg("/me "+MUSIC_FLAG+" "+str);
-							console.log(data);
-							MDATA=data;
-							//alert("get");
-						}
-					});
-				}else{
-					MUSIC_FLAG=false;
-					var j=0;
-					for(;j<obj[i].message.length;j++)if(obj[i].message[j]=='放')break;
-					var t=obj[i].message.slice(j+1);
-					//sendMessage("/me 已点播"+MDATA.result.songs[parseInt(t)].id,50);
-					playMusic("https://music.163.com/song?id="+MDATA.result.songs[parseInt(t)].id);
-					//sendMessage("/me 已点播",50);
-				}
-			}
 			if(obj[i].message.indexOf("style")!=-1){
 				if(obj[i].message.indexOf("bgImage=")!=-1){
 					var j=obj[i].message.indexOf("bgImage=")+8;
@@ -167,20 +119,7 @@ function interactMessage(){
 					//for(var i=t;i<t+2;i++)str+=(i+":"+MDATA.result.songs[i].name+"-"+MDATA.result.songs[i].artists[0].name+"|");
 					sendPublicMsg("/me "+t);
 				}
-			}
-			/*if(obj[i].to==undefined&&obj[i].message.indexOf("plumo")>=0){
-				sendPublicMsg("123");
-			}else if(obj[i].to!=undefined&&obj[i].message.indexOf("plumo")>=0){
-				sendPrivateMsg(obj[i].from.id,"123");
-			}*/
-			
-		}else if(obj[i].type=="join"&&obj[i].time>LAST_MSG_TIMESTAMP){
-			LAST_MSG_TIMESTAMP=obj[i].time;
-			var user=obj[i].user.name;
-			//alert("JOIN");
-			sendPublicMsg("贵安，"+user+"大人");
-			//setTimeout(function(){sendPrivateMessage(obj[i].user.id,"由于网络原因，所有有关plumo的操作可能会有5s的延迟，请主人多多谅解~");},300);
-			//break;
+			}	
 		}
 	}
 }
