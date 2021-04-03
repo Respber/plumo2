@@ -1,10 +1,19 @@
-$("body").append("<div id=\"botTab\" style=\"display:none;position:fixed;top:300px;left:0px;height:500px;width:300px;background-color:white;color:black;\"><button onclick=\"playerInit() \">test</button><br><span id=\"text\"></span></div>");
+var server="http://plumo.free.idcfengye.com/";
+var server2="http://plumo2api.free.idcfengye.com/";
+
+//initModel(\"assets/\")
+//var server="http://localhost/";
+//var server2="http://localhost:3000/";
+$("body").append("<div id=\"botTab\" style=\"display:none;position:fixed;top:300px;left:0px;height:500px;width:300px;background-color:white;color:black;\"><button onclick=\"init()\">test</button><button onclick=\"test()\">test2</button><br><span id=\"text\"></span></div>");
 //$("body").append("<div id=\"botSettingTab\" style=\"position:fixed;top:300px;left:0px;height:500px;width:300px;background-color:white;color:black;\"><button onclick=\"changeTalksBgImg('http://localhost/bg3.jpg') \">test</button><br><span id=\"text\"></span></div>");
 $("head").append("<link rel=\"stylesheet\" href=\"https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css \">");
-$("head").append("<link rel=\"stylesheet\" href=\"http://localhost/APlayer.min.css \">");
+$("head").append("<link rel=\"stylesheet\" href=\""+server+"APlayer.min.css \">");
+$("head").append("<link rel=\"stylesheet\" type=\"text/css\" href=\""+server+"assets/waifu.css\"/>");
 $("head").append("<style>.aplayer-title{color:black}</style>");
 $("body").append("<div id=\"aplayer\" style=\"position:fixed;left:0px;bottom:0px;min-width:400px;\"></div>");
-$("body").append("<script src=\"http://localhost/APlayer.min.js \"></script>");
+$("body").append("<script src=\""+server+"APlayer.min.js \"></script>");
+//<div class=\"waifu-tool\"><span class=\"fui-home\"></span><span class=\"fui-chat\"></span><span class=\"fui-eye\"></span><span class=\"fui-user\"></span><span class=\"fui-photo\"></span><span class=\"fui-info-circle\"></span><span class=\"fui-cross\"></span>
+$("body").append("<div class=\"waifu\"><div class=\"waifu-tips\"></div><canvas id=\"live2d\" width=\"280\" height=\"250\" class=\"live2d\"></canvas></div></div><script src=\""+server+"assets/waifu-tips.js\"></script><script src=\""+server+"assets/live2d.js\"></script>");
 $(".menu:first").append("<li id=\"bot\" style=\"display:list-item;\"><i class=\"fa fa-wrench\"></i></li>");
 $(".message_box").css({"opacity":"0.6"});
 document.getElementsByClassName("message_box")[0].onmouseover=function(){
@@ -14,10 +23,14 @@ document.getElementsByClassName("message_box")[0].onmouseout=function(){
 	$(".message_box").css({"opacity":"0.6"});
 }
 
-function playerInit(){
-
-ap.init();
+function init(){
+	initModel("http://localhost/assets/");
 }
+function test(){
+	showMessage("fuck",3000);
+}
+
+
 //http://music.163.com/song/media/outer/url?id=ID数字.mp3
 //http://music.163.com/api/song/media?id=863046037
 //*****Aplayer*****
@@ -77,12 +90,13 @@ function changeTalksColor(co){
 }
 //*****特殊功能*****
 
-var LAST_MSG_TIMESTAMP=1616917241.2933;
+var LAST_MSG_TIMESTAMP=1617373042.0986;
 var usersName=new Array();
 var usersId=new Array();
 var RECV=new Object();
 function sendPublicMsg(msg){
 	post("https://drrr.com/room",{"message":msg});
+	//showMessage(msg,3000);
 	return;
 }
 function sendPrivateMsg(target,msg){
@@ -128,6 +142,20 @@ function interactMessage(){
 			LAST_MSG_TIMESTAMP=obj[i].time;
 			var MSG=obj[i].message;
 			if(obj[i].type=="me")MSG=obj[i].content;
+			if(obj[i].from.name=="plumo"&&obj[i].type!="me")showMessage(MSG,5000);
+			if(MSG.indexOf("plumo")!=-1&&MSG.indexOf("调戏")!=-1){
+				
+				showMessage("禁止调戏plumo",5000);
+			}
+			
+			if(MSG.indexOf("给我来一杯")!=-1){
+				var j=0;
+				for(;j<MSG.length;j++)if(MSG[j]=='杯')break;
+				var t=MSG.slice(j+1);
+				//sendPublicMsg("/me @"+obj[i].from.name+" "+obj[i].from.name+"大人,您的"+t);
+				showMessage(obj[i].from.name+"大人,您的"+t,5000);
+			}
+			
 			
 			if(MSG.indexOf("style")!=-1){
 				if(MSG.indexOf("bgImage=")!=-1){
@@ -157,7 +185,7 @@ function interactMessage(){
 					var LRC="";
 					$.ajax({
 						type: "get",
-						url:'http://127.0.0.1:3000/lyric/?id='+t,
+						url:server2+'lyric/?id='+t,
 						async:false,
 						success:function(data){
 							if(!("nolyric" in data))LRC=data.lrc.lyric;
@@ -169,7 +197,7 @@ function interactMessage(){
 					var details=new Object();
 					$.ajax({
 						type: "get",
-						url:'http://127.0.0.1:3000/song/detail?ids='+t,
+						url:server2+'song/detail?ids='+t,
 						async:false,
 						success:function(data){
 							details=data;
@@ -212,6 +240,7 @@ function interactMessage(){
 			}*/
 			
 		}
+		//break;
 	}
 }
 
